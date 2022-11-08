@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="feedback-button" @click="toggleFeedbackModal()">
+    <div class="feedback-button" @click="toggleFeedbackModal()" v-if="clientId">
       <img src="../assets/feedback.png" alt="feedback" />
     </div>
     <div
       class="feedback-modal"
       @click.self="toggleFeedbackModal()"
-      v-if="!showFeeadbackModal"
+      v-if="showFeeadbackModal"
     >
       <div
         class="feedback-modal-wrapper"
@@ -25,7 +25,9 @@
             cols="30"
             rows="10"
           ></textarea>
-          <button class="submit-button">Send message</button>
+          <button type="button" class="submit-button" @click="sendFeedback()">
+            Send message
+          </button>
         </form>
         <div class="success-area" v-else>
           <img src="../assets/check.png" alt="check" />
@@ -56,6 +58,7 @@ export default {
   data() {
     return {
       showFeeadbackModal: false,
+      clientId: null,
       success: false,
       model: {
         message: null,
@@ -63,8 +66,20 @@ export default {
     };
   },
   methods: {
+    init(clientId) {
+      this.clientId = clientId;
+    },
     toggleFeedbackModal() {
       this.showFeeadbackModal = !this.showFeeadbackModal;
+    },
+    async sendFeedback() {
+      let payload = {
+        clientId: this.clientId,
+        text: this.model.message,
+      };
+      await this.axios
+        .post("http://localhost:3000/feedbacks", payload)
+        .then(() => {});
     },
   },
 };
