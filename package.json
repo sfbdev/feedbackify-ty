@@ -1,11 +1,11 @@
 {
   "name": "feedbackify-ty",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build-library" : "vue-cli-service build --target lib --name vue-feedback-button ./src/install.js",
+    "build-library": "vue-cli-service build --target lib --name vue-feedback-button ./src/install.js",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
@@ -21,7 +21,8 @@
     "axios": "^1.1.3",
     "core-js": "^3.8.3",
     "vue": "^2.6.14",
-    "vue-axios": "^3.5.2"
+    "vue-axios": "^3.5.2",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

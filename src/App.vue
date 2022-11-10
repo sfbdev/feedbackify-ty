@@ -1,16 +1,19 @@
 <template>
   <div id="app">
-    <Feedback />
-    sfds
+    <app-feedback></app-feedback>
   </div>
 </template>
 
 <script>
-import Feedback from "@/components/Feedback.vue";
 export default {
   name: "App",
-  components: { Feedback },
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
+
+body {
+  font-family: "Roboto", sans-serif;
+}
+</style>

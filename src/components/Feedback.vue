@@ -1,20 +1,20 @@
 <template>
   <div>
-    <div class="feedback-button" @click="toggleFeedbackModal()" v-if="clientId">
-      <img src="../assets/feedback.png" alt="feedback" />
+    <div class="feedback-button" @click="toggleFeedbackModal()">
+      <img src="../../public/chat.svg" alt="feedback" />
     </div>
     <div
+      :class="dark ? 'dark' : 'light'"
       class="feedback-modal"
       @click.self="toggleFeedbackModal()"
       v-if="showFeeadbackModal"
     >
       <div
         class="feedback-modal-wrapper"
-        :class="dark ? 'dark' : 'light'"
         :style="{ width: width, height: height }"
       >
         <div class="close-button" @click="toggleFeedbackModal()">
-          <img src="../assets/close.png" alt="" />
+          <img src="../../public/close.svg" alt="" />
         </div>
 
         <form class="feedback-form" v-if="!success">
@@ -25,12 +25,12 @@
             cols="30"
             rows="10"
           ></textarea>
-          <button type="button" class="submit-button" @click="sendFeedback()">
+          <button type="button" class="submit-button" @click="feedbackAction()">
             Send message
           </button>
         </form>
         <div class="success-area" v-else>
-          <img src="../assets/check.png" alt="check" />
+          <img src="../../public/check.svg" alt="check" />
           <span>We have got your feedback!</span>
         </div>
       </div>
@@ -39,12 +39,13 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "FFeedback",
   props: {
     dark: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     width: {
       type: String,
@@ -52,34 +53,45 @@ export default {
     },
     height: {
       type: String,
-      default: "500px",
+      default: "400px",
     },
   },
   data() {
     return {
       showFeeadbackModal: false,
-      clientId: null,
       success: false,
       model: {
         message: null,
       },
     };
   },
-  methods: {
-    init(clientId) {
-      this.clientId = clientId;
+  computed: {
+    testId() {
+      return this.$furkan || "hi";
     },
+  },
+  mounted() {},
+  methods: {
     toggleFeedbackModal() {
       this.showFeeadbackModal = !this.showFeeadbackModal;
+      this.success = false;
+      this.model.message = null;
     },
-    async sendFeedback() {
+    ...mapActions({
+      sendFeedback: "sendFeedback",
+    }),
+
+    feedbackAction() {
       let payload = {
-        clientId: this.clientId,
+        clientId: 4,
         text: this.model.message,
       };
-      await this.axios
-        .post("http://localhost:3000/feedbacks", payload)
-        .then(() => {});
+      console.log("p", payload);
+      this.sendFeedback(payload).then((res) => {
+        console.log(res);
+        this.success = true;
+        this.model.message = null;
+      });
     },
   },
 };
@@ -90,7 +102,7 @@ export default {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  background-color: rgba(155, 139, 139, 0.332);
+  background-color: #f7f7f7;
   border-radius: 100%;
   padding: 20px;
   display: flex;
@@ -110,15 +122,15 @@ export default {
   width: 100vw;
   height: 100vh;
   z-index: 1000;
-  background-color: #00000080;
   .feedback-modal-wrapper {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 40px;
+    box-shadow: 0px 5px 16px rgba(0, 0, 0, 0.28);
 
     .close-button {
       position: absolute;
@@ -131,7 +143,7 @@ export default {
       padding: 6px;
       cursor: pointer;
       img {
-        width: 12px;
+        width: 32px;
       }
     }
 
@@ -149,7 +161,7 @@ export default {
         width: 100%;
       }
       textarea {
-        border-radius: 12px;
+        border-radius: 4px;
         text-indent: 16px;
         padding-top: 16px;
         outline: 0;
@@ -157,6 +169,7 @@ export default {
         color: #ffffff;
         resize: none;
         width: 100%;
+        font-size: 14px;
       }
       .submit-button {
         margin-top: 24px;
@@ -167,12 +180,13 @@ export default {
         border: 0;
         padding: 20px;
         width: 100%;
-        border-radius: 12px;
+        border-radius: 4px;
         cursor: pointer;
       }
     }
     .submit-button {
       background-color: #243447;
+      background-color: #f27a1a;
       color: #ffffff;
     }
 
@@ -190,7 +204,12 @@ export default {
         font-weight: 700;
       }
     }
-    &.dark {
+  }
+
+  &.dark {
+    background-color: #00000095;
+
+    .feedback-modal-wrapper {
       background-color: #141d26;
       .close-button {
         background-color: #ffffff70;
@@ -212,8 +231,13 @@ export default {
         }
       }
     }
-    &.light {
-      background-color: #ffffff;
+  }
+
+  &.light {
+    background-color: #00000080;
+
+    .feedback-modal-wrapper {
+      background-color: #f6f6f6;
       .close-button {
         background-color: #ffffff70;
       }
@@ -223,7 +247,7 @@ export default {
           color: #243447;
         }
         textarea {
-          background-color: #f3f6f4;
+          background-color: #e8e8e8;
           color: #243447;
         }
       }
